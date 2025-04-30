@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import localData from "../../../data/manual/exploit_data/exploits.json";
 import { ExploitItem } from "@/types/exploits";
-
+import { useView } from "@/context/ViewContext";
 // Define the API response structure
 interface ApiResponse {
   code?: number;
@@ -42,12 +42,17 @@ const localDataFallback: ExploitItem[] = localData.exploits_data.map(
 import data from "./data.json";
 import { useEffect, useState } from "react";
 import { ChartExploitsArea } from "@/components/chart-exploits-area";
+import { ExploitsTable } from "@/components/table-form";
+import Dashboard from "../analytics/page";
+import ResourcesComponent from "@/components/resources";
 
 export default function Page() {
   const [exploitdata, setData] = useState<ExploitItem[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalExploits, setTotalExploits] = useState<number | null>(null);
+
+  const { activeView } = useView();
 
   useEffect(() => {
     setLoading(true);
@@ -92,16 +97,43 @@ export default function Page() {
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartExploitsArea exploits={exploitdata} />
-                {/* <ChartAreaInteractive /> */}
+          {activeView === "Dashboard" && (
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <SectionCards />
+                <div className="px-4 lg:px-6">
+                  <ChartExploitsArea exploits={exploitdata} />
+                  {/* <ChartAreaInteractive /> */}
+                </div>
+                {/* <DataTable data={data} /> */}
+                <div className="px-4 lg:px-6">
+                  <h1 className="text-3xl font-bold tracking-tight mb-2">
+                    Exploit History
+                  </h1>
+                  <p className="text-muted-foreground mb-6">
+                    A comprehensive database of exploits in the Solana ecosystem
+                  </p>
+                  <ExploitsTable />
+                </div>
               </div>
-              <DataTable data={data} />
             </div>
-          </div>
+          )}
+          {activeView === "Analytics" && (
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <Dashboard />
+            </div>
+          )}
+
+          {activeView === "Exploits" && (
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <ExploitsTable />
+            </div>
+          )}
+          {activeView === "Resources" && (
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <ResourcesComponent />
+            </div>
+          )}
         </div>
       </SidebarInset>
     </SidebarProvider>

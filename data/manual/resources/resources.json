@@ -1,0 +1,74 @@
+{
+  "resources": [
+    {
+      "title": "Solana Smart Contract Security Best Practices",
+      "description": "Detailed documentation of common vulnerabilities and best practices for securing smart contracts on Solana, covering issues like integer overflows, improper signer checks, PDA misuse, and Anchor framework attacks.",
+      "link": "https://github.com/slowmist/solana-smart-contract-security-best-practices",
+      "category": "Documentation",
+      "languages": ["English", "中文"]
+    },
+    {
+      "title": "Solana Program Security: Best Practices to Prevent Exploits",
+      "description": "An in-depth blog post analyzing real vulnerabilities in Solana smart contracts, with a breakdown of insecure code and actionable best practices to prevent common exploits.",
+      "link": "https://medium.com/@rkmonarch/solana-program-security-best-practices-to-prevent-exploits-f88b4a427bce",
+      "category": "Blog",
+      "languages": ["English"]
+    },
+    {
+      "title": "How to Approach the Program Security Course",
+      "description": "A structured course designed to deepen your understanding of common security exploits in Solana smart contracts, based on Coral's Sealevel Attacks repository. Ideal for developers using both Anchor and native Rust.",
+      "link": "https://solana.com/developers/courses/program-security/security-intro",
+      "category": "Course",
+      "languages": ["English"]
+    },
+    {
+      "title": "Solana Smart Contracts: Common Pitfalls and How to Avoid Them",
+      "description": "Explains the critical importance of verifying that authorized accounts have signed a transaction, with examples in both Anchor and native Rust.",
+      "link": "https://neodyme.io/en/blog/solana_common_pitfalls/#intro",
+      "category": "Blog",
+      "languages": ["English"]
+    },
+    {
+      "title": "Owner Checks in Solana Smart Contracts",
+      "description": "Highlights the importance of verifying that accounts are owned by the expected program, with examples in both Anchor and native Rust to prevent spoofed or malicious account injections.",
+      "link": "https://solana.com/developers/courses/program-security/owner-checks",
+      "category": "Course",
+      "languages": ["English"]
+    },
+    {
+      "title": "Account Data Matching",
+      "description": "Explores how to securely validate and match on-chain account data to prevent mismatches, spoofing, or unauthorized access in Solana programs.",
+      "link": "https://solana.com/developers/courses/program-security/account-data-matching",
+      "category": "Course",
+      "languages": ["English"]
+    },
+    {
+      "title": "Reinitialization Attacks",
+      "description": "Explains how reinitializing already-initialized Solana accounts can introduce critical vulnerabilities and how to guard against them using Anchor and native Rust.",
+      "link": "https://solana.com/developers/courses/program-security/reinitialization-attacks",
+      "category": "Course",
+      "languages": ["English"]
+    },
+    {
+      "title": "Duplicate Mutable Accounts",
+      "description": "Understand vulnerabilities that can occur with instruction handlers that handle two mutable",
+      "link": "https://solana.com/developers/courses/program-security/duplicate-mutable-accounts",
+      "category": "Course",
+      "languages": ["English"]
+    },
+    {
+      "title": "Type Cosplay",
+      "description": "Understand the risks of using incorrect account types in instructions and how to mitigate them",
+      "link": "https://solana.com/developers/courses/program-security/type-cosplay",
+      "category": "Course",
+      "languages": ["English"]
+    },
+    {
+      "title": "Bump Seed Canonicalization",
+      "description": "Understand the need for consistent PDA calculation by storing and reusing the canonicalized bump seed in the account data.",
+      "link": "https://solana.com/developers/courses/program-security/bump-seed-canonicalization",
+      "category": "Course",
+      "languages": ["English"]
+    }
+  ]
+}
