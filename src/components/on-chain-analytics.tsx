@@ -7,7 +7,7 @@
 //   queryId: 5065871,
 // });
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -37,181 +37,38 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
+import { fetchFailedTransactions, fetchHighFrequencySigners } from "@/lib/dune-api";
 
 export default function TransactionsDashboard() {
-  // Data for high frequency signers
-  const highFrequencySigners = [
-    {
-      signer: "7qbNi8QFrREPfz6iBzTQ483dPzTDeZj4bDpknvNvNs7x",
-      tx_count: 2932589,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "CzYQ2kFnBxsNEt9Zy34vQ3n5fSDhvA4o4XaTnq1rLvyr",
-      tx_count: 2735535,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "3pjWyeFUPa9Sppf15BAJYim4K2kVZThbLbYzThhLUBbG",
-      tx_count: 2640761,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:47",
-    },
-    {
-      signer: "rm4cojNDeUfFQZBMVUSTuxFn15dpAmygaaqyaaWqbUC",
-      tx_count: 2458044,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "CKWXpDkudKoVDhhDJC7uRd5Ccb8eaBv2TWfTpLB539DC",
-      tx_count: 2423901,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "HXzkkswG8A2etA2nWWQg6NQKoy4zXrZP5JmXYFrYNRdz",
-      tx_count: 1975775,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "cTVLoQdWzfgCArmDYh94fDjAVA6DcCgEf53y3dUzTbP",
-      tx_count: 1681742,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "uAngRgGLdeemerpmLampgLJ4ENFMygHPuKdU2nKwBNg",
-      tx_count: 1641588,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "eDqdPqBnLYdwBfDDHzzkeXXBFYEyU21ieLhCsPgnbSo",
-      tx_count: 1638387,
-      first_tx: "2025-04-30 00:10",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "oQPnhXAbLbMuKHESaGrbXT17CyvWCpLyERSJA9HCYd7",
-      tx_count: 1605184,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "8iQP7Kqj1sSL8ThenF66Fx5mDYpPTPYTeGx9i25os9VG",
-      tx_count: 1404302,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "4XBqViD1XYF1qHrErrsXBzDrCapvP9fEFX4LPjXZi9YU",
-      tx_count: 1161021,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "8TPWakvWw4xQbk7uAYdNjZiDKKHgv9GE5GebzsbtUaHr",
-      tx_count: 1152287,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "updtkJ8HAhh3rSkBCd3p9Z1Q74yJW4rMhSbScRskDPM",
-      tx_count: 1045140,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "86JGVSkKzWTBYJam3FVFgibiQEv64127ZobDU8ibtuTu",
-      tx_count: 1023348,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "A7FMMgue4aZmPLLoutVtbC7gJcyqkHybUieiaDg9aaVE",
-      tx_count: 926625,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "2QfBNK2WDwSLoUQRb1zAnp3KM12N9hQ8q6ApwUMnWW2T",
-      tx_count: 884106,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "MfDuWeqSHEqTFVYZ7LoexgAK9dxk7cy4DFJWjWMGVWa",
-      tx_count: 588675,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "GzW9nhfuZcDoPaQVcrk7zhm4uVrfnTxqEQAB5bRcdFDX",
-      tx_count: 556195,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 18:03",
-    },
-    {
-      signer: "DBiFSnJPkNQEuk9zStjhGhSS5UaWQpxTYP4fXYmxfn2w",
-      tx_count: 541196,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:40",
-    },
-    {
-      signer: "FFidPdmHnSVWEHoX6PfTG1DTUjzw4jexpCComf2QBrrh",
-      tx_count: 519071,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:47",
-    },
-    {
-      signer: "6kntKawNmZNKZqUHvRVGKMwp8LQU5upyhht7w1PL7dde",
-      tx_count: 515629,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "7H2aMNigJrHi5TtXtDtEN9NFQRp5x7GQR48SUWdZ7SnW",
-      tx_count: 455175,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "HQUygbE1xW1JTiQSMxds3VcPe5ZjqzUrCE9gEaweohKK",
-      tx_count: 437349,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-    {
-      signer: "6rRiMihF7UdJz25t5QvS7PgP9yzfubN7TBRv26ZBVAhE",
-      tx_count: 422342,
-      first_tx: "2025-04-29 22:51",
-      last_tx: "2025-04-30 22:48",
-    },
-  ];
+  const [highFrequencySigners, setHighFrequencySigners] = useState<any[]>([]);
+  const [failedTransactions, setFailedTransactions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
 
-  // Data for failed transactions
-  const failedTransactions = [
-    {
-      day: "2025-03-06",
-      total_failed: 35704747,
-      failed_rate: 0.3911190041650717,
-    },
-    {
-      day: "2023-11-21",
-      total_failed: 19984629,
-      failed_rate: 0.49117789053354954,
-    },
-    {
-      day: "2024-03-05",
-      total_failed: 24538257,
-      failed_rate: 0.5379256874998849,
-    },
-  ];
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const [failedTxData, highFreqData] = await Promise.all([
+          fetchFailedTransactions(),
+          fetchHighFrequencySigners()
+        ]);
+        setFailedTransactions(failedTxData);
+        setHighFrequencySigners(highFreqData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to fetch data from Dune API. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   // Format the data for the bar chart
   const chartData = failedTransactions.map((item) => ({
@@ -220,15 +77,29 @@ export default function TransactionsDashboard() {
     "Failure Rate": (item.failed_rate * 100).toFixed(2),
   }));
 
-  // For pagination of high frequency signers
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
   const pageCount = Math.ceil(highFrequencySigners.length / itemsPerPage);
-
   const paginatedSigners = highFrequencySigners.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <span className="ml-2">Loading data...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -249,8 +120,8 @@ export default function TransactionsDashboard() {
             <Info className="h-4 w-4" />
             <AlertTitle>Important Notice</AlertTitle>
             <AlertDescription>
-              Data shows significant transaction failure rates, with up to 53.8%
-              failures recorded on 2024-03-05.
+              Data shows significant transaction failure rates, with up to {Math.max(...failedTransactions.map(tx => tx.failed_rate * 100)).toFixed(1)}%
+              failures recorded on {failedTransactions.find(tx => tx.failed_rate === Math.max(...failedTransactions.map(tx => tx.failed_rate)))?.day}.
             </AlertDescription>
           </Alert>
 
