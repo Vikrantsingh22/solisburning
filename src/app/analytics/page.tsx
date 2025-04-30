@@ -14,15 +14,7 @@ import {
   Pie,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Search,
-  AlertTriangle,
-  DollarSign,
-  Calendar,
-  ArrowUpDown,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
+import { AlertTriangle, DollarSign, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { ExploitsTable } from "@/components/table-form";
 // Parse the data
@@ -1703,7 +1695,7 @@ const rawData = {
 const exploitsData = rawData.exploits_data;
 
 // Format currency in millions
-const formatCurrency = (value) => {
+const formatCurrency = (value: any) => {
   if (value >= 1000000) {
     return `$${(value / 1000000).toFixed(1)}M`;
   }
