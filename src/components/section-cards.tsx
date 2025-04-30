@@ -3,7 +3,7 @@ import axios from "axios";
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -34,9 +34,20 @@ interface ApiResponse {
     };
   };
 }
-
-// Cast the local data to proper type
-const localDataFallback: ExploitItem[] = localData.exploits_data;
+// Cast and validate the local data
+const localDataFallback: ExploitItem[] = localData.exploits_data.map(
+  (item) => ({
+    ...item,
+    network: item.network?.name || "", // Handle null network with fallback
+    description: {
+      ...item.description,
+      sections: item.description.sections.map((section) => ({
+        ...section,
+        title: section.title || "", // Convert null titles to empty string
+      })),
+    },
+  })
+);
 
 export function SectionCards() {
   const [data, setData] = useState<ExploitItem[] | null>(null);
@@ -95,17 +106,18 @@ export function SectionCards() {
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+      {error && (
+        <div className="col-span-full rounded-md bg-destructive/15 p-4 text-destructive">
+          {error}
+        </div>
+      )}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Exploits Reported</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             {loading ? "Loading..." : totalExploits}
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />+{Math.round(Math.random() * 20)}%
-            </Badge>
-          </CardAction>
+          <CardAction></CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -124,11 +136,7 @@ export function SectionCards() {
               ? "Loading..."
               : `$${(totalFundsLost / 1000000).toFixed(1)}M`}
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />+{Math.round(Math.random() * 10 + 5)}%
-            </Badge>
-          </CardAction>
+          <CardAction></CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -148,11 +156,7 @@ export function SectionCards() {
               ? "Loading..."
               : `$${(totalFundsRecovered / 1000000).toFixed(1)}M`}
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />+{Math.round(Math.random() * 5 + 2)}%
-            </Badge>
-          </CardAction>
+          <CardAction></CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -171,11 +175,7 @@ export function SectionCards() {
               ? "Loading..."
               : `${(recoveryPercentage * 100).toFixed(1)}%`}
           </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />-{Math.round(Math.random() * 2 + 1)}%
-            </Badge>
-          </CardAction>
+          <CardAction></CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
