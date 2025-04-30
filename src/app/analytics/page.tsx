@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ExploitsTable } from "@/components/table-form";
-
 // Parse the data
 const rawData = {
   exploits_data: [
