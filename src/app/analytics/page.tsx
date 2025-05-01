@@ -1722,7 +1722,7 @@ const timelineData = exploitsData
     project: item.project_name,
     amount: item.funds_lost,
   }))
-  .sort((a, b) => new Date(a.date) - new Date(b.date));
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
 // Prepare data for the recovered vs lost funds chart
 const fundsRecoveryData = exploitsData.map((item) => ({

@@ -1728,14 +1728,33 @@ const exploitsData = [
 
 export function ExploitsTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState(null);
-  const [filterStatus, setFilterStatus] = useState(null);
+  const [filterType, setFilterType] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState({
     column: "date",
     direction: "desc",
   });
   // State to track selected exploit for the drawer
-  const [selectedExploit, setSelectedExploit] = useState(null);
+  interface ExploitDetails {
+    header: any;
+    type: any;
+    status: any;
+    target: string;
+    limit: any;
+    category: any;
+    funds_returned: string;
+    proof: any;
+    twitter_link: any;
+    website_link: any;
+    token_address: any;
+    telegram: any;
+    reviewer: string;
+    description: any;
+  }
+
+  const [selectedExploit, setSelectedExploit] = useState<ExploitDetails | null>(
+    null
+  );
 
   // Format funds in USD
   const formatFunds = (amount) => {
@@ -1792,8 +1811,10 @@ export function ExploitsTable() {
 
       if (sortBy.column === "date") {
         return sortBy.direction === "asc"
-          ? new Date(a.date.iso) - new Date(b.date.iso)
-          : new Date(b.date.iso) - new Date(a.date.iso);
+          ? new Date(a.date.iso || 0).getTime() -
+              new Date(b.date.iso || 0).getTime()
+          : new Date(b.date.iso || 0).getTime() -
+              new Date(a.date.iso || 0).getTime();
       }
 
       // String comparison for other columns
@@ -2116,7 +2137,9 @@ function TableCellViewer({ item }) {
           </div> */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-3">
-              <Label htmlFor="type">Vulnerability Type</Label>
+              <label htmlFor="type" className="font-medium">
+                Vulnerability Type
+              </label>
               Funds Lost:
               {/* <Select defaultValue={item.type}>
                 <SelectTrigger id="type" className="w-full">
@@ -2141,7 +2164,9 @@ function TableCellViewer({ item }) {
               <div>{item.target}</div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="status">Audit Status</Label>
+              <label htmlFor="status" className="font-medium">
+                Audit Status
+              </label>
               {/* <Select defaultValue={item.status}>
                 <SelectTrigger id="status" className="w-full">
                   <SelectValue placeholder="Select a status" />
@@ -2168,7 +2193,9 @@ function TableCellViewer({ item }) {
           </div> */}
           {item?.token_address?.length > 1 ? (
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Investigation Lead</Label>
+              <label htmlFor="reviewer" className="font-medium">
+                Investigation Lead
+              </label>
               {/* Printing the token address here: */}
               Token Address:
               <div>{item.token_address}</div>
@@ -2205,7 +2232,9 @@ function TableCellViewer({ item }) {
           ) : null}
           {item?.proof[0]?.length > 1 ? (
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Investigation Lead</Label>
+              <label htmlFor="reviewer" className="font-medium">
+                Investigation Lead
+              </label>
               {/* Printing the token address here: */}
               Proof Links:
               {item.proof.map((link, index) => (

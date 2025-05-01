@@ -111,16 +111,26 @@ export default function ResourcesComponent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [languageFilter, setLanguageFilter] = useState("All");
-  const [filteredResources, setFilteredResources] = useState([]);
+  const [filteredResources, setFilteredResources] = useState<
+    {
+      title: string;
+      description: string;
+      link: string;
+      category: string;
+      languages: string[];
+    }[]
+  >([]);
 
   // Extract unique categories and languages for filters
   const categories = [
     "All",
-    ...new Set(data.resources.map((resource) => resource.category)),
+    ...Array.from(new Set(data.resources.map((resource) => resource.category))),
   ];
   const languages = [
     "All",
-    ...new Set(data.resources.flatMap((resource) => resource.languages)),
+    ...Array.from(
+      new Set(data.resources.flatMap((resource) => resource.languages))
+    ),
   ];
 
   useEffect(() => {
