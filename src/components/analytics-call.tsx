@@ -87,15 +87,8 @@ export default function AnalyticsCall() {
   }, []);
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
-      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        {/* <DataTable data={data} /> */}
+      <div className="flex flex-col gap-4 py-0 md:gap-6 md:py-0">
         <div className="px-4 lg:px-6">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
-            Exploit History
-          </h1>
-          <p className="text-muted-foreground mb-6">
-            A rehashed database of exploits in the Solana ecosystem
-          </p>
           <AnalyticsChart exploits={exploitdata} />
         </div>
       </div>
