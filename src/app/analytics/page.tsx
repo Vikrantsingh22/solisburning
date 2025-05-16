@@ -1700,7 +1700,7 @@ interface ChartExploitsAreaProps {
   exploits?: ExploitItem[] | null;
 }
 
-export function AnalyticsChart({ exploits = [] }: ChartExploitsAreaProps) {
+function AnalyticsChart({ exploits = [] }: ChartExploitsAreaProps) {
   if (!exploits || exploits.length === 0) {
     return (
       <Card className="@container/card">
