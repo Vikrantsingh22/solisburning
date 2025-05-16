@@ -21,19 +21,18 @@ export function NavMain({
   }[];
 }) {
   const router = useRouter();
-  const { setActiveView } = useView();
+  const { setActiveView, activeView } = useView();
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
-            <SidebarMenuButton
+            {/* <SidebarMenuButton
               tooltip="Home"
               className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
             >
-              <IconCirclePlusFilled />
               <span>Home</span>
-            </SidebarMenuButton>
+            </SidebarMenuButton> */}
             {/* <Button
               size="icon"
               className="size-8 group-data-[collapsible=icon]:opacity-0"
@@ -49,7 +48,13 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 tooltip={item.title}
+                // isActive={activeView === item.title}
                 onClick={() => setActiveView(item.title)}
+                className={
+                  activeView === item.title
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+                    : ""
+                }
               >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>

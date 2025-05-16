@@ -17,6 +17,16 @@ import {
 import { AlertTriangle, DollarSign, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { ExploitsTable } from "@/components/table-form";
+import { ExploitItem } from "@/types/exploits";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 // Parse the data
 const rawData = {
   exploits_data: [
@@ -1691,52 +1701,70 @@ const rawData = {
     },
   ],
 };
+interface ChartExploitsAreaProps {
+  exploits?: ExploitItem[] | null;
+}
 
-const exploitsData = rawData.exploits_data;
-
-// Format currency in millions
-const formatCurrency = (value: any) => {
-  if (value >= 1000000) {
-    return `$${(value / 1000000).toFixed(1)}M`;
+export default function AnalyticsChart({
+  exploits = [],
+}: ChartExploitsAreaProps) {
+  if (!exploits || exploits.length === 0) {
+    return (
+      <Card className="@container/card">
+        <CardHeader>
+          <CardTitle>Generating Charts</CardTitle>
+          <CardDescription>Loading</CardDescription>
+        </CardHeader>
+        <CardContent className="flex h-auto items-center justify-center">
+          <Spinner size="large" />
+        </CardContent>
+      </Card>
+    );
   }
-  return `$${(value / 1000).toFixed(1)}K`;
-};
+  const exploitsData = exploits;
 
-// Group scams by type
-const scamTypeData = exploitsData.reduce((acc, curr) => {
-  const type = curr.scam_type.type;
-  if (!acc[type]) {
-    acc[type] = { type, count: 0, totalLost: 0 };
-  }
-  acc[type].count += 1;
-  acc[type].totalLost += curr.funds_lost;
-  return acc;
-}, {});
+  // Format currency in millions
+  const formatCurrency = (value: any) => {
+    if (value >= 1000000) {
+      return `$${(value / 1000000).toFixed(1)}M`;
+    }
+    return `$${(value / 1000).toFixed(1)}K`;
+  };
 
-const scamTypeArray = Object.values(scamTypeData);
+  // Group scams by type
+  const scamTypeData = exploitsData.reduce((acc, curr) => {
+    const type = curr.scam_type.type;
+    if (!acc[type]) {
+      acc[type] = { type, count: 0, totalLost: 0 };
+    }
+    acc[type].count += 1;
+    acc[type].totalLost += curr.funds_lost;
+    return acc;
+  }, {});
 
-// Format date for the time series
-const timelineData = exploitsData
-  .map((item) => ({
-    date: new Date(item.date.timestamp).toLocaleDateString(),
-    project: item.project_name,
-    amount: item.funds_lost,
-  }))
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const scamTypeArray = Object.values(scamTypeData);
 
-// Prepare data for the recovered vs lost funds chart
-const fundsRecoveryData = exploitsData.map((item) => ({
-  name: item.project_name,
-  lost: item.funds_lost,
-  returned: item.funds_returned,
-  recovered: item.funds_recovered,
-  total: item.funds_lost - item.funds_returned - item.funds_recovered,
-}));
+  // Format date for the time series
+  const timelineData = exploitsData
+    .map((item) => ({
+      date: new Date(item.date.timestamp).toLocaleDateString(),
+      project: item.project_name,
+      amount: item.funds_lost,
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-// Colors for charts
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
+  // Prepare data for the recovered vs lost funds chart
+  const fundsRecoveryData = exploitsData.map((item) => ({
+    name: item.project_name,
+    lost: item.funds_lost,
+    returned: item.funds_returned,
+    recovered: item.funds_recovered,
+    total: item.funds_lost - item.funds_returned - item.funds_recovered,
+  }));
 
-export default function Dashboard() {
+  // Colors for charts
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
+
   const [selectedProject, setSelectedProject] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -1915,7 +1943,7 @@ export default function Dashboard() {
         </div>
 
         {/* Project List */}
-        <ExploitsTable />
+        <ExploitsTable exploitsData={exploits} />
       </div>
 
       {/* Selected Project Details */}

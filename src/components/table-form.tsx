@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -25,6 +31,7 @@ import {
   FilterIcon,
   InfoIcon,
   AreaChart,
+  ExternalLink,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -53,9 +60,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { ExploitItem } from "@/types/exploits";
+import axios from "axios";
+import { Spinner } from "./ui/spinner";
 
 // The new exploits data from the JSON file
-const exploitsData = [
+const LocalexploitsData: ExploitItem[] = [
   {
     project_name: "LIBRA",
     name_categories: "Token",
@@ -1725,8 +1735,27 @@ const exploitsData = [
     },
   },
 ];
+interface ApiResponse {
+  code?: number;
+  data?: {
+    items?: ExploitItem[];
+    currentPage?: number;
+    lastPage?: number;
+    total?: number;
+    meta?: {
+      total_items?: number;
+      current_page?: number;
+      last_page?: number;
+      processed_at?: string;
+      processing_version?: string;
+    };
+  };
+}
+interface ExploitsTableProps {
+  exploitsData?: ExploitItem[] | null;
+}
 
-export function ExploitsTable() {
+export function ExploitsTable({ exploitsData = [] }: ExploitsTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
@@ -1734,6 +1763,9 @@ export function ExploitsTable() {
     column: "date",
     direction: "desc",
   });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalExploits, setTotalExploits] = useState<number | null>(null);
   // State to track selected exploit for the drawer
   interface ExploitDetails {
     header: any;
@@ -1755,6 +1787,19 @@ export function ExploitsTable() {
   const [selectedExploit, setSelectedExploit] = useState<ExploitDetails | null>(
     null
   );
+  if (!exploitsData || exploitsData.length === 0) {
+    return (
+      <Card className="@container/card">
+        <CardHeader>
+          <CardTitle>Loading Exploit Funds</CardTitle>
+          <CardDescription>Hold Your Gun Loading</CardDescription>
+        </CardHeader>
+        <CardContent className="flex h-auto items-center justify-center">
+          <Spinner size="large" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   // Format funds in USD
   const formatFunds = (amount) => {
@@ -1769,15 +1814,19 @@ export function ExploitsTable() {
 
   // Get unique scam types and audit statuses for filters
   const typeOptions = Array.from(
-    new Set(exploitsData.map((item) => item.scam_type.type))
+    new Set(
+      (exploitsData ?? LocalexploitsData).map((item) => item.scam_type.type)
+    )
   );
 
   const statusOptions = Array.from(
-    new Set(exploitsData.map((item) => item.audit_status))
+    new Set(
+      (exploitsData ?? LocalexploitsData).map((item) => item.audit_status)
+    )
   );
 
   // Filter and sort the data
-  const filteredData = exploitsData
+  const filteredData = (exploitsData ?? LocalexploitsData)
     .filter((item) => {
       // Search term filter
       const searchTermMatch =
@@ -2025,6 +2074,9 @@ export function ExploitsTable() {
                   )}
                 </button>
               </TableHead>
+              <TableHead>
+                <button className="flex items-center gap-1 ">Info</button>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -2071,6 +2123,22 @@ export function ExploitsTable() {
                       {exploit.audit_status}
                     </Badge>
                   </TableCell>
+                  <TableCell>
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <Button
+                          variant="link"
+                          className="text-foreground w-fit px-0 text-left"
+                          onClick={() => handleProjectClick(exploit)}
+                        >
+                          <ExternalLink />
+                        </Button>
+                      </DrawerTrigger>
+                      {selectedExploit && (
+                        <TableCellViewer item={selectedExploit} />
+                      )}
+                    </Drawer>
+                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -2080,7 +2148,8 @@ export function ExploitsTable() {
       <div className="p-4 text-sm text-muted-foreground flex items-center gap-2">
         <InfoIcon className="h-4 w-4" />
         <span>
-          Showing {filteredData.length} of {exploitsData.length} exploits
+          Showing {filteredData.length} of{" "}
+          {(exploitsData ?? LocalexploitsData).length} exploits
         </span>
       </div>
     </Card>
