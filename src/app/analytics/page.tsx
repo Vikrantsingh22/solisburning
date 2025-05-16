@@ -1700,7 +1700,7 @@ interface ChartExploitsAreaProps {
   exploits?: ExploitItem[] | null;
 }
 
-function AnalyticsChart({ exploits = [] }: ChartExploitsAreaProps) {
+export function AnalyticsChart({ exploits = [] }: ChartExploitsAreaProps) {
   if (!exploits || exploits.length === 0) {
     return (
       <Card className="@container/card">
@@ -1783,210 +1783,215 @@ function AnalyticsChart({ exploits = [] }: ChartExploitsAreaProps) {
 
   return (
     <div className="dark:bg-gray-900 dark:text-gray-100 min-h-screen bg-gray-100 p-4">
-      <header className="bg-white dark:bg-gray-800 dark:shadow-lg shadow rounded-lg p-4 mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-          Exploit Analytics Dashboard
-        </h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Tracking crypto scams and exploits
-        </p>
-      </header>
+      <div className="dark:bg-gray-900 dark:text-gray-100 min-h-screen bg-gray-100 p-4">
+        <header className="bg-white dark:bg-gray-800 dark:shadow-lg shadow rounded-lg p-4 mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            Exploit Analytics Dashboard
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Tracking crypto scams and exploits
+          </p>
+        </header>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-          <div className="flex items-center">
-            <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full mr-4">
-              <DollarSign className="w-6 h-6 text-red-500 dark:text-red-400" />
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+            <div className="flex items-center">
+              <div className="bg-red-100 dark:bg-red-900 p-3 rounded-full mr-4">
+                <DollarSign className="w-6 h-6 text-red-500 dark:text-red-400" />
+              </div>
+              <div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  Total Funds Lost
+                </p>
+                <p className="text-2xl font-bold dark:text-gray-100">
+                  {formatCurrency(totalLost)}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Total Funds Lost
-              </p>
-              <p className="text-2xl font-bold dark:text-gray-100">
-                {formatCurrency(totalLost)}
-              </p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+            <div className="flex items-center">
+              <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full mr-4">
+                <CheckCircle className="w-6 h-6 text-green-500 dark:text-green-400" />
+              </div>
+              <div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  Total Funds Recovered
+                </p>
+                <p className="text-2xl font-bold dark:text-gray-100">
+                  {formatCurrency(totalRecovered)}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+            <div className="flex items-center">
+              <div className="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full mr-4">
+                <AlertTriangle className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
+              </div>
+              <div>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  Active Scams
+                </p>
+                <p className="text-2xl font-bold dark:text-gray-100">
+                  {activeScams}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-          <div className="flex items-center">
-            <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full mr-4">
-              <CheckCircle className="w-6 h-6 text-green-500 dark:text-green-400" />
-            </div>
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Total Funds Recovered
-              </p>
-              <p className="text-2xl font-bold dark:text-gray-100">
-                {formatCurrency(totalRecovered)}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-          <div className="flex items-center">
-            <div className="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full mr-4">
-              <AlertTriangle className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
-            </div>
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Active Scams
-              </p>
-              <p className="text-2xl font-bold dark:text-gray-100">
-                {activeScams}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-6">
-        {/* Funds Lost by Project */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-4 dark:text-gray-100">
-            Funds Lost by Project
-          </h2>
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={fundsRecoveryData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="#e5e7eb"
-                  className="dark:stroke-gray-700"
-                />
-                <XAxis
-                  dataKey="name"
-                  stroke="#6b7280"
-                  className="dark:stroke-gray-400"
-                />
-                <YAxis
-                  tickFormatter={formatCurrency}
-                  stroke="#6b7280"
-                  className="dark:stroke-gray-400"
-                />
-                <Tooltip
-                  contentStyle={{ backgroundColor: "#fff", color: "#111" }}
-                  wrapperClassName="dark:bg-gray-800 dark:text-gray-100"
-                  formatter={(value) => formatCurrency(value)}
-                />
-                <Legend
-                  wrapperStyle={{ color: "#374151" }}
-                  className="dark:text-gray-100"
-                />
-                <Bar dataKey="lost" fill="#FF8042" name="Funds Lost" />
-                {/* <Bar
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-6">
+          {/* Funds Lost by Project */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+            <h2 className="text-lg font-semibold mb-4 dark:text-gray-100">
+              Funds Lost by Project
+            </h2>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={fundsRecoveryData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#e5e7eb"
+                    className="dark:stroke-gray-700"
+                  />
+                  <XAxis
+                    dataKey="name"
+                    stroke="#6b7280"
+                    className="dark:stroke-gray-400"
+                  />
+                  <YAxis
+                    tickFormatter={formatCurrency}
+                    stroke="#6b7280"
+                    className="dark:stroke-gray-400"
+                  />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "#fff", color: "#111" }}
+                    wrapperClassName="dark:bg-gray-800 dark:text-gray-100"
+                    formatter={(value) => formatCurrency(value)}
+                  />
+                  <Legend
+                    wrapperStyle={{ color: "#374151" }}
+                    className="dark:text-gray-100"
+                  />
+                  <Bar dataKey="lost" fill="#FF8042" name="Funds Lost" />
+                  {/* <Bar
                   dataKey="recovered"
                   fill="#0088FE"
                   name="Funds Recovered"
                 /> */}
-                <Bar dataKey="returned" fill="#00C49F" name="Funds Recovered" />
-              </BarChart>
-            </ResponsiveContainer>
+                  <Bar
+                    dataKey="returned"
+                    fill="#00C49F"
+                    name="Funds Recovered"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Scam Types Distribution */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+            <h2 className="text-lg font-semibold mb-4 dark:text-gray-100">
+              Exploit Types Distribution
+            </h2>
+            <div className="h-64 flex justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart width={300} height={250}>
+                  <Pie
+                    data={scamTypeArray}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="count"
+                    nameKey="type"
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
+                  >
+                    {scamTypeArray.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "#fff", color: "#111" }}
+                    wrapperClassName="dark:bg-gray-800 dark:text-gray-100"
+                    formatter={(value, name) => [`${value} scams`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
-        {/* Scam Types Distribution */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-4 dark:text-gray-100">
-            Exploit Types Distribution
-          </h2>
-          <div className="h-64 flex justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart width={300} height={250}>
-                <Pie
-                  data={scamTypeArray}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="count"
-                  nameKey="type"
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
+        {/* Timeline & Project Details */}
+        <div className="grid grid-cols-1 gap-6 mb-6">
+          {/* Timeline */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+            <h2 className="text-lg font-semibold mb-4 dark:text-gray-100">
+              Exploit Timeline
+            </h2>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  width={1000}
+                  height={250}
+                  data={timelineData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
-                  {scamTypeArray.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: "#fff", color: "#111" }}
-                  wrapperClassName="dark:bg-gray-800 dark:text-gray-100"
-                  formatter={(value, name) => [`${value} scams`, name]}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#e5e7eb"
+                    className="dark:stroke-gray-700"
+                  />
+                  <XAxis
+                    dataKey="date"
+                    stroke="#6b7280"
+                    className="dark:stroke-gray-400"
+                  />
+                  <YAxis
+                    tickFormatter={formatCurrency}
+                    stroke="#6b7280"
+                    className="dark:stroke-gray-400"
+                  />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "#fff", color: "#111" }}
+                    wrapperClassName="dark:bg-gray-800 dark:text-gray-100"
+                    formatter={(value) => formatCurrency(value)}
+                  />
+                  <Legend
+                    wrapperStyle={{ color: "#374151" }}
+                    className="dark:text-gray-100"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="amount"
+                    stroke="#8884d8"
+                    name="Funds Lost"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Timeline & Project Details */}
-      <div className="grid grid-cols-1 gap-6 mb-6">
-        {/* Timeline */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-          <h2 className="text-lg font-semibold mb-4 dark:text-gray-100">
-            Exploit Timeline
-          </h2>
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                width={1000}
-                height={250}
-                data={timelineData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="#e5e7eb"
-                  className="dark:stroke-gray-700"
-                />
-                <XAxis
-                  dataKey="date"
-                  stroke="#6b7280"
-                  className="dark:stroke-gray-400"
-                />
-                <YAxis
-                  tickFormatter={formatCurrency}
-                  stroke="#6b7280"
-                  className="dark:stroke-gray-400"
-                />
-                <Tooltip
-                  contentStyle={{ backgroundColor: "#fff", color: "#111" }}
-                  wrapperClassName="dark:bg-gray-800 dark:text-gray-100"
-                  formatter={(value) => formatCurrency(value)}
-                />
-                <Legend
-                  wrapperStyle={{ color: "#374151" }}
-                  className="dark:text-gray-100"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="amount"
-                  stroke="#8884d8"
-                  name="Funds Lost"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Project List */}
+          <ExploitsTable exploitsData={exploits} />
         </div>
 
-        {/* Project List */}
-        <ExploitsTable exploitsData={exploits} />
-      </div>
-
-      {/* Selected Project Details */}
-      {/* {selectedProject && (
+        {/* Selected Project Details */}
+        {/* {selectedProject && (
         <div className="bg-white shadow rounded-lg p-4 mb-6">
           <h2 className="text-xl font-bold mb-4">
             {selectedProject.project_name} Details
@@ -2071,15 +2076,7 @@ function AnalyticsChart({ exploits = [] }: ChartExploitsAreaProps) {
           </div>
         </div>
       )} */}
-    </div>
-  );
-}
-
-const exploits = rawData.exploits_data;
-export default function Page() {
-  return (
-    <div className="dark:bg-gray-900 dark:text-gray-100 min-h-screen bg-gray-100 p-4">
-      <AnalyticsChart exploits={exploits} />
+      </div>
     </div>
   );
 }

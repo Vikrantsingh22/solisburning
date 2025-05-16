@@ -41,7 +41,7 @@ const localDataFallback: ExploitItem[] = localData.exploits_data.map(
 import { useEffect, useState } from "react";
 import { ChartExploitsArea } from "@/components/chart-exploits-area";
 import { ExploitsTable } from "@/components/table-form";
-import AnalyticsChart from "@/app/analytics/page";
+import { AnalyticsChart } from "@/app/analytics/page";
 
 export default function AnalyticsCall() {
   const [exploitdata, setData] = useState<ExploitItem[] | null>(null);

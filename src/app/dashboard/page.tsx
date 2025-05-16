@@ -42,7 +42,6 @@ const localDataFallback: ExploitItem[] = localData.exploits_data.map(
 import { useEffect, useState } from "react";
 import { ChartExploitsArea } from "@/components/chart-exploits-area";
 import { ExploitsTable } from "@/components/table-form";
-import Dashboard from "../analytics/page";
 import ResourcesComponent from "@/components/resources";
 import TransactionsDashboard from "@/components/on-chain-analytics";
 import ExploitTable from "@/components/exploits-table-call";
