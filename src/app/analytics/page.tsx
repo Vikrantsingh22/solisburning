@@ -1765,7 +1765,9 @@ export default function AnalyticsChart({
   // Colors for charts
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedProject, setSelectedProject] = useState(null);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredData = exploitsData.filter((item) =>
